@@ -16,26 +16,85 @@ namespace Capstone
             VendingMachine vendingMachine = new VendingMachine();
             vendingMachine.Items = GetItems();
             int userInput = 0;
+            int purchaseInputOption = 0;
+            int providedCash = 0;
+            bool isDone = false;
 
-            Console.WriteLine("(1) Display Vending Machine Items");
-            Console.WriteLine("(2) Purchase");
-            userInput = Convert.ToInt32(Console.ReadLine());
-
-            if (userInput == 1)
+            while (isDone != true)
             {
-                foreach (IVendingItem item in vendingMachine.Items)
+
+
+                Console.WriteLine("\n(1) Display Vending Machine Items");
+                Console.WriteLine("(2) Purchase");
+                userInput = Convert.ToInt32(Console.ReadLine());
+
+                if (userInput == 1)
                 {
-                    //Console.WriteLine(item.ItemName + "|" + item.GetType());
-                    Console.WriteLine(item.ItemSlot + ": " + item.ItemName + "..." + item.ItemPrice.ToString("c") + " Qty: " + item.Stock);  
+                    foreach (IVendingItem item in vendingMachine.Items)
+                    {
+                        //Console.WriteLine(item.ItemName + "|" + item.GetType());
+                        Console.WriteLine(item.ItemSlot + ": " + item.ItemName + "..." + item.ItemPrice.ToString("c") + " Qty: " + item.Stock);
+                    }
+                }
+                else if (userInput == 2)
+                {
+                    purchaseInputOption = DisplayPurchaseMenu(vendingMachine);
+                    while (purchaseInputOption != 3)
+                    {
+                        if (purchaseInputOption == 1)
+                        {
+                            Console.Write("How much money are you putting in?: ");
+                            providedCash = Convert.ToInt32(Console.ReadLine());
+                            vendingMachine.CurrentMoneyProvided += providedCash;
+                        }
+                        else if (purchaseInputOption == 2)
+                        {
+                            string productChoice = "";
+                            Console.Write("Please enter the product code: ");
+                            productChoice = Console.ReadLine();
+                            IVendingItem item = vendingMachine.Items.Find(p => p.ItemSlot == productChoice);
+
+
+                            if (item != null)
+                            {
+                                if (item.Stock > 0)
+                                {
+                                    if (item.ItemPrice <= vendingMachine.CurrentMoneyProvided)
+                                    {
+                                        double remainingChange = vendingMachine.CurrentMoneyProvided - item.ItemPrice;
+                                        vendingMachine.CurrentMoneyProvided -= item.ItemPrice;
+                                        vendingMachine.Balance += item.ItemPrice;
+                                        item.Stock--;
+                                        Console.WriteLine("Item purchase successful");
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Item out of stock");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Product not found");
+                            }
+                        }
+                        purchaseInputOption = DisplayPurchaseMenu(vendingMachine);
+                    }
                 }
             }
-            else if (userInput == 2)
-            {
-                Console.WriteLine("Enter Item Number:");
+        }
 
-            }
+        private static int DisplayPurchaseMenu(VendingMachine vendingMachine)
+        {
+            int purchaseInputOption = 0;
 
-
+            Console.WriteLine("(1) Feed Money");
+            Console.WriteLine("(2) Select Product");
+            Console.WriteLine("(3) Finish Transaction");
+            Console.WriteLine("Current Money Provided: " + vendingMachine.CurrentMoneyProvided.ToString("C"));
+            purchaseInputOption = Convert.ToInt32(Console.ReadLine());
+            return purchaseInputOption;
         }
 
         private static List<IVendingItem> GetItems()
@@ -44,7 +103,7 @@ namespace Capstone
 
             try
             {
-                using(StreamReader sr = new StreamReader("vendingmachine.csv"))
+                using (StreamReader sr = new StreamReader("vendingmachine.csv"))
                 {
                     while (!sr.EndOfStream)
                     {
@@ -85,7 +144,7 @@ namespace Capstone
                     }
                 }
             }
-            catch(IOException ex)
+            catch (IOException ex)
             {
                 Console.WriteLine("Input error: " + ex);
             }

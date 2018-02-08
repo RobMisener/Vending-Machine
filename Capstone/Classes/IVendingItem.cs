@@ -17,5 +17,6 @@ namespace Capstone.Classes
         string Message { get; }
 
         int Stock { get; set; }
+
     }
 }

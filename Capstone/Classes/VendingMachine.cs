@@ -10,11 +10,14 @@ namespace Capstone.Classes
     {
         public List<IVendingItem> Items { get; set; }
 
+        public double CurrentMoneyProvided { get; set; }
 
+        public double Balance { get; set; }
 
         public void Purchase()
         {
 
         }
+
     }
 }
