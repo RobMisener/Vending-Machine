@@ -8,9 +8,9 @@ namespace Capstone.Classes.VendingItems
 {
     public class Gum : IVendingItem
     {
-        public string ItemName { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string ItemSlot { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double ItemPrice { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string ItemName { get; set; }
+        public string ItemSlot { get; set; }
+        public double ItemPrice { get; set; }
         public string Message => "Chew Chew, Yum!";
     }
 }
