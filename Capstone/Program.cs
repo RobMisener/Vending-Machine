@@ -19,13 +19,14 @@ namespace Capstone
             int purchaseInputOption = 0;
             int providedCash = 0;
             bool isDone = false;
+            List<IVendingItem> items = new List<IVendingItem>();
 
             while (isDone != true)
             {
 
-
                 Console.WriteLine("\n(1) Display Vending Machine Items");
                 Console.WriteLine("(2) Purchase");
+                Console.WriteLine("(3) Quit");
                 userInput = Convert.ToInt32(Console.ReadLine());
 
                 if (userInput == 1)
@@ -65,6 +66,7 @@ namespace Capstone
                                         vendingMachine.CurrentMoneyProvided -= item.ItemPrice;
                                         vendingMachine.Balance += item.ItemPrice;
                                         item.Stock--;
+                                        items.Add(item);
                                         Console.WriteLine("Item purchase successful");
                                     }
 
@@ -79,9 +81,28 @@ namespace Capstone
                                 Console.WriteLine("Product not found");
                             }
                         }
+
                         purchaseInputOption = DisplayPurchaseMenu(vendingMachine);
                     }
+                    if (purchaseInputOption == 3)
+                    {
+                        Change change = new Change();
+                        change.ReturnChange(vendingMachine.CurrentMoneyProvided);
+
+                        Console.WriteLine("You get back " + vendingMachine.CurrentMoneyProvided.ToString("C") + " in " + change.Quarters + " quarters, " + change.Dimes + " dimes, and " + change.Nickels + " nickels");
+
+                        foreach (IVendingItem item in items)
+                        {
+                            Console.WriteLine(item.Message);
+                        }
+                    }
+
                 }
+                else if (userInput == 3)
+                {
+                    return;
+                }
+
             }
         }
 
@@ -151,5 +172,7 @@ namespace Capstone
 
             return items;
         }
+
+        //    private static i
     }
 }

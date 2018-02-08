@@ -13,7 +13,7 @@ namespace Capstone.Classes
         public double CurrentMoneyProvided { get; set; }
 
         public double Balance { get; set; }
-
+        
         public void Purchase()
         {
 
