@@ -15,5 +15,7 @@ namespace Capstone.Classes
         double ItemPrice { get; set; }
 
         string Message { get; }
+
+        int Stock { get; set; }
     }
 }

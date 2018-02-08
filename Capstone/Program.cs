@@ -15,10 +15,27 @@ namespace Capstone
         {
             VendingMachine vendingMachine = new VendingMachine();
             vendingMachine.Items = GetItems();
-            foreach (IVendingItem item in vendingMachine.Items)
+            int userInput = 0;
+
+            Console.WriteLine("(1) Display Vending Machine Items");
+            Console.WriteLine("(2) Purchase");
+            userInput = Convert.ToInt32(Console.ReadLine());
+
+            if (userInput == 1)
             {
-                Console.WriteLine(item.ItemName + "|" + item.GetType());
+                foreach (IVendingItem item in vendingMachine.Items)
+                {
+                    //Console.WriteLine(item.ItemName + "|" + item.GetType());
+                    Console.WriteLine(item.ItemSlot + ": " + item.ItemName + "..." + item.ItemPrice.ToString("c") + " Qty: " + item.Stock);  
+                }
             }
+            else if (userInput == 2)
+            {
+                Console.WriteLine("Enter Item Number:");
+
+            }
+
+
         }
 
         private static List<IVendingItem> GetItems()

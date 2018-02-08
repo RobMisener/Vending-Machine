@@ -10,6 +10,8 @@ namespace Capstone.Classes
     {
         public List<IVendingItem> Items { get; set; }
 
+
+
         public void Purchase()
         {
 
