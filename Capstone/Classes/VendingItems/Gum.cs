@@ -12,13 +12,6 @@ namespace Capstone.Classes.VendingItems
         public string ItemSlot { get; set; }
         public double ItemPrice { get; set; }
         public string Message => "Chew Chew, Yum!";
-        public int Stock
-        {
-            get
-            {
-                return 5;
-            }
-            set { }
-        }
+        public int Stock { get; set; }
     }
 }

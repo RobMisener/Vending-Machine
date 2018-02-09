@@ -34,7 +34,9 @@ namespace Capstone
                     foreach (IVendingItem item in vendingMachine.Items)
                     {
                         //Console.WriteLine(item.ItemName + "|" + item.GetType());
-                        Console.WriteLine(item.ItemSlot + ": " + item.ItemName + "..." + item.ItemPrice.ToString("c") + " Qty: " + item.Stock);
+                        string stockString = (item.Stock > 0) ? item.Stock.ToString() : "SOLD OUT";
+                        
+                        Console.WriteLine(item.ItemSlot + ": " + item.ItemName + "..." + item.ItemPrice.ToString("c") + " Qty: " + stockString);
                     }
                 }
                 else if (userInput == 2)
@@ -44,9 +46,15 @@ namespace Capstone
                     {
                         if (purchaseInputOption == 1)
                         {
+
                             Console.Write("How much money are you putting in?: ");
                             providedCash = Convert.ToInt32(Console.ReadLine());
+                            Transaction transaction = new Transaction();
+                            transaction.PreviousBalance = vendingMachine.CurrentMoneyProvided;
                             vendingMachine.CurrentMoneyProvided += providedCash;
+                            transaction.TransactionType = "FEED MONEY";
+                            transaction.Machine = vendingMachine;
+                            transaction.PrintTransaction();
                         }
                         else if (purchaseInputOption == 2)
                         {
@@ -54,22 +62,24 @@ namespace Capstone
                             Console.Write("Please enter the product code: ");
                             productChoice = Console.ReadLine();
                             IVendingItem item = vendingMachine.Items.Find(p => p.ItemSlot == productChoice);
-
-
                             if (item != null)
                             {
                                 if (item.Stock > 0)
                                 {
                                     if (item.ItemPrice <= vendingMachine.CurrentMoneyProvided)
                                     {
+                                        Transaction transaction = new Transaction();
+                                        transaction.PreviousBalance = vendingMachine.CurrentMoneyProvided;
                                         double remainingChange = vendingMachine.CurrentMoneyProvided - item.ItemPrice;
                                         vendingMachine.CurrentMoneyProvided -= item.ItemPrice;
                                         vendingMachine.Balance += item.ItemPrice;
                                         item.Stock--;
                                         items.Add(item);
+                                        transaction.Item = item;
+                                        transaction.Machine = vendingMachine;
+                                        transaction.PrintTransaction();
                                         Console.WriteLine("Item purchase successful");
                                     }
-
                                 }
                                 else
                                 {
@@ -81,7 +91,6 @@ namespace Capstone
                                 Console.WriteLine("Product not found");
                             }
                         }
-
                         purchaseInputOption = DisplayPurchaseMenu(vendingMachine);
                     }
                     if (purchaseInputOption == 3)
@@ -95,14 +104,19 @@ namespace Capstone
                         {
                             Console.WriteLine(item.Message);
                         }
-                    }
 
+                        Transaction transaction = new Transaction();
+                        transaction.PreviousBalance = vendingMachine.CurrentMoneyProvided;
+                        vendingMachine.CurrentMoneyProvided = 0.00;
+                        transaction.TransactionType = "GIVE CHANGE";
+                        transaction.Machine = vendingMachine;
+                        transaction.PrintTransaction();
+                    }
                 }
                 else if (userInput == 3)
                 {
                     return;
                 }
-
             }
         }
 
@@ -138,6 +152,7 @@ namespace Capstone
                                 chipItem.ItemSlot = itemParts[0];
                                 chipItem.ItemName = itemParts[1];
                                 chipItem.ItemPrice = Convert.ToDouble(itemParts[2]);
+                                chipItem.Stock = 5;
                                 items.Add(chipItem);
                                 break;
                             case 'B':
@@ -145,6 +160,7 @@ namespace Capstone
                                 candy.ItemSlot = itemParts[0];
                                 candy.ItemName = itemParts[1];
                                 candy.ItemPrice = Convert.ToDouble(itemParts[2]);
+                                candy.Stock = 5;
                                 items.Add(candy);
                                 break;
                             case 'C':
@@ -153,12 +169,14 @@ namespace Capstone
                                 drink.ItemName = itemParts[1];
                                 drink.ItemPrice = Convert.ToDouble(itemParts[2]);
                                 items.Add(drink);
+                                drink.Stock = 5;
                                 break;
                             case 'D':
                                 Gum gum = new Gum();
                                 gum.ItemSlot = itemParts[0];
                                 gum.ItemName = itemParts[1];
                                 gum.ItemPrice = Convert.ToDouble(itemParts[2]);
+                                gum.Stock = 5;
                                 items.Add(gum);
                                 break;
                         }
