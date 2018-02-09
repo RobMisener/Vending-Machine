@@ -8,6 +8,7 @@ namespace Capstone.Classes.VendingItems
 {
     public class Chips : IVendingItem
     {
+        public int SoldItems { get; set; }
         public string ItemName { get; set; }
         public string ItemSlot { get; set; }
         public double ItemPrice { get; set; }

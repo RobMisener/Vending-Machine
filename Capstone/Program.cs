@@ -68,6 +68,7 @@ namespace Capstone
                                         item = vendingMachine.DecreaseStock(item);
                                         items.Add(item);
                                         vendingMachine.Purchase(vendingMachine, item, transaction);
+                                        vendingMachine.SalesReport(vendingMachine, item);
                                     }
                                 }
                                 else

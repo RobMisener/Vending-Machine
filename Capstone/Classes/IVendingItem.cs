@@ -8,6 +8,8 @@ namespace Capstone.Classes
 {
     public interface IVendingItem
     {
+
+
         string ItemName { get; set; }
 
         string ItemSlot { get; set; }
@@ -17,6 +19,8 @@ namespace Capstone.Classes
         string Message { get; }
 
         int Stock { get; set; }
+
+        int SoldItems { get; set; }
 
 
 
