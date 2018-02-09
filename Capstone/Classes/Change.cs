@@ -11,26 +11,27 @@ namespace Capstone.Classes
         public int Nickels { get; set; }
         public int Dimes { get; set; }
         public int Quarters { get; set; }
-        public double Total { get; set;}
+        public decimal Total { get; set;}
 
-        public void ReturnChange(double amounReturned)
+        public void ReturnChange(decimal amounReturned)
         {
+            
             Total = amounReturned;
 
-            while (amounReturned >= .25)
+            while (amounReturned >= .25M)
             {
                 Quarters++;
-                amounReturned -= 0.25;
+                amounReturned -= .25M;
             }
-            while (amounReturned >= .10)
+            while (amounReturned >= .10M)
             {
                 Dimes++;
-                amounReturned -= 0.10;
+                amounReturned -= 0.10M;
             }
-            while (amounReturned >= .05)
+            while (amounReturned >= .05M)
             {
-                Dimes++;
-                amounReturned -= 0.05;
+                Nickels++;
+                amounReturned -= .05M;
             }
         }
        

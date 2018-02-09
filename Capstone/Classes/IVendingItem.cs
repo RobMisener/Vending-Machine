@@ -18,5 +18,7 @@ namespace Capstone.Classes
 
         int Stock { get; set; }
 
+
+
     }
 }

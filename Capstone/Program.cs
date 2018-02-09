@@ -64,14 +64,10 @@ namespace Capstone
                                         Transaction transaction = new Transaction();
                                         transaction.PreviousBalance = vendingMachine.CurrentMoneyProvided;
                                         double remainingChange = vendingMachine.CurrentMoneyProvided - item.ItemPrice;
-                                        vendingMachine.CurrentMoneyProvided -= item.ItemPrice;
-                                        vendingMachine.Balance += item.ItemPrice;
-                                        item.Stock--;
+                                        vendingMachine.UpdateBalance(vendingMachine, item);
+                                        item = vendingMachine.DecreaseStock(item);
                                         items.Add(item);
-                                        transaction.Item = item;
-                                        transaction.Machine = vendingMachine;
-                                        transaction.PrintTransaction();
-                                        Console.WriteLine("Item purchase successful");
+                                        vendingMachine.Purchase(vendingMachine, item, transaction);
                                     }
                                 }
                                 else
@@ -89,7 +85,7 @@ namespace Capstone
                     if (purchaseInputOption == 3)
                     {
                         Change change = new Change();
-                        change.ReturnChange(vendingMachine.CurrentMoneyProvided);
+                        change.ReturnChange((decimal)vendingMachine.CurrentMoneyProvided);
 
                         Console.WriteLine("You get back " + vendingMachine.CurrentMoneyProvided.ToString("C") + " in " + change.Quarters + " quarters, " + change.Dimes + " dimes, and " + change.Nickels + " nickels");
 

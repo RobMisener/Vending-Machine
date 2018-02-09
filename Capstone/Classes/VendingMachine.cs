@@ -36,6 +36,15 @@ namespace Capstone.Classes
             return vendingMachine;
             }
 
+        public List<IVendingItem> ReStockEachItem(List<IVendingItem> items)
+        {
+            foreach (IVendingItem item in items)
+            {
+                item.Stock = 5;
+            }
+            return items;
+        }
+
 
         public List<IVendingItem> GetItems()
         {
@@ -57,7 +66,6 @@ namespace Capstone.Classes
                                 chipItem.ItemSlot = itemParts[0];
                                 chipItem.ItemName = itemParts[1];
                                 chipItem.ItemPrice = Convert.ToDouble(itemParts[2]);
-                                chipItem.Stock = 5;
                                 items.Add(chipItem);
                                 break;
                             case 'B':
@@ -65,7 +73,6 @@ namespace Capstone.Classes
                                 candy.ItemSlot = itemParts[0];
                                 candy.ItemName = itemParts[1];
                                 candy.ItemPrice = Convert.ToDouble(itemParts[2]);
-                                candy.Stock = 5;
                                 items.Add(candy);
                                 break;
                             case 'C':
@@ -74,14 +81,12 @@ namespace Capstone.Classes
                                 drink.ItemName = itemParts[1];
                                 drink.ItemPrice = Convert.ToDouble(itemParts[2]);
                                 items.Add(drink);
-                                drink.Stock = 5;
                                 break;
                             case 'D':
                                 Gum gum = new Gum();
                                 gum.ItemSlot = itemParts[0];
                                 gum.ItemName = itemParts[1];
                                 gum.ItemPrice = Convert.ToDouble(itemParts[2]);
-                                gum.Stock = 5;
                                 items.Add(gum);
                                 break;
                         }
@@ -93,7 +98,30 @@ namespace Capstone.Classes
                 Console.WriteLine("Input error: " + ex);
             }
 
+            items = ReStockEachItem(items);
+
             return items;
+        }
+
+        public VendingMachine UpdateBalance(VendingMachine vendingMachine, IVendingItem item)
+        {
+            vendingMachine.CurrentMoneyProvided -= item.ItemPrice;
+            vendingMachine.Balance += item.ItemPrice;
+            return vendingMachine;
+        }
+
+        public IVendingItem DecreaseStock(IVendingItem item)
+        {
+            item.Stock--;
+            return item;
+        }
+
+        public void Purchase(VendingMachine vendingMachine, IVendingItem item, Transaction transaction)
+        {
+            transaction.Item = item;
+            transaction.Machine = vendingMachine;
+            transaction.PrintTransaction();
+            Console.WriteLine("Item purchase successful");
         }
 
     }
