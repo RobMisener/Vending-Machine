@@ -118,40 +118,51 @@ namespace Capstone.Classes
 
         public void SalesReport(VendingMachine vendingMachine, IVendingItem item)
         {
-            int countLine = 1;
             if (File.Exists("SalesReport.txt"))
             {
                 using (StreamReader sr = new StreamReader("SalesReport.txt"))
                 {
-                    while (!sr.EndOfStream)
+                    using (StreamWriter sw = new StreamWriter("TempSalesReport.txt"))
                     {
-
-
-                        if (File.Exists("SalesReport.txt"))
+                        while (!sr.EndOfStream)
                         {
+                            string stringItem = sr.ReadLine();
 
-                            using (StreamWriter srr = new StreamWriter("SalesReport.txt"))
+
+                            if (stringItem.Contains(item.ItemName))
                             {
-                                string stringItem = sr.ReadLine();
-
-
-                                if (stringItem.Contains(item.ItemName))
-                                {
-                                    string[] itemParts = stringItem.Split('|');
-                                    int previousSold = Convert.ToInt32(itemParts[1]);
-                                    int newAmount = (previousSold + item.SoldItems);
-                                    string newText = item.ItemName + "|" + newAmount;
-                                    lineChanger(newText, "SalesReport.txt", countLine);
-                                }
-
-                                countLine++;
-
+                                string[] itemParts = stringItem.Split('|');
+                                int previousSold = Convert.ToInt32(itemParts[1]);
+                                int newAmount = (previousSold+1);
+                                string newText = item.ItemName + "|" + newAmount;
+                                //lineChanger(newText, "SalesReport.txt", countLine);
+                                sw.WriteLine(newText);
                             }
+                            else
+                            {
+                                if (stringItem.Contains("Total Sales"))
+                                {
+                                    string newText = "Total Sales|" + vendingMachine.Balance.ToString("C");
+                                    sw.WriteLine(newText);
+                                }
+                                else
+                                {
+                                    sw.WriteLine(stringItem);
+                                }
+                                
+                            }
+                            
                         }
 
                     }
-
+                    sr.Close();
                 }
+                
+                File.Delete("SalesReport.txt");
+                File.Move("TempSalesReport.txt", "SalesReport.txt");
+                File.Delete("TempSalesReport.txt");
+
+
             }
 
             else
@@ -167,11 +178,14 @@ namespace Capstone.Classes
             }
         }
 
-            static void lineChanger(string newText, string fileName, int line_to_edit)
+        static void lineChanger(string newText, string fileName, int line_to_edit)
         {
-            string[] arrLine = File.ReadAllLines(fileName);
-            arrLine[line_to_edit - 1] = newText;
-            File.WriteAllLines(fileName, arrLine);
+            using (StreamWriter sw = new StreamWriter(fileName, false))
+            {
+                string[] arrLine = File.ReadAllLines(fileName);
+                arrLine[line_to_edit - 1] = newText;
+                File.WriteAllLines(fileName, arrLine);
+            }
         }
 
 
