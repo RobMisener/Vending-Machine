@@ -14,7 +14,7 @@ namespace Capstone
         static void Main(string[] args)
         {
             VendingMachine vendingMachine = new VendingMachine();
-            vendingMachine.Items = GetItems();
+            vendingMachine.Items = vendingMachine.GetItems();
             int userInput = 0;
             int purchaseInputOption = 0;
             int providedCash = 0;
@@ -46,15 +46,8 @@ namespace Capstone
                     {
                         if (purchaseInputOption == 1)
                         {
-
-                            Console.Write("How much money are you putting in?: ");
-                            providedCash = Convert.ToInt32(Console.ReadLine());
-                            Transaction transaction = new Transaction();
-                            transaction.PreviousBalance = vendingMachine.CurrentMoneyProvided;
-                            vendingMachine.CurrentMoneyProvided += providedCash;
-                            transaction.TransactionType = "FEED MONEY";
-                            transaction.Machine = vendingMachine;
-                            transaction.PrintTransaction();
+                            providedCash = vendingMachine.GetProvidedCash();
+                            vendingMachine.FeedMoney(providedCash, vendingMachine);
                         }
                         else if (purchaseInputOption == 2)
                         {
@@ -132,64 +125,7 @@ namespace Capstone
             return purchaseInputOption;
         }
 
-        private static List<IVendingItem> GetItems()
-        {
-            List<IVendingItem> items = new List<IVendingItem>();
-
-            try
-            {
-                using (StreamReader sr = new StreamReader("vendingmachine.csv"))
-                {
-                    while (!sr.EndOfStream)
-                    {
-                        string stringItem = sr.ReadLine();
-
-                        string[] itemParts = stringItem.Split('|');
-                        switch (itemParts[0][0])
-                        {
-                            case 'A':
-                                Chips chipItem = new Chips();
-                                chipItem.ItemSlot = itemParts[0];
-                                chipItem.ItemName = itemParts[1];
-                                chipItem.ItemPrice = Convert.ToDouble(itemParts[2]);
-                                chipItem.Stock = 5;
-                                items.Add(chipItem);
-                                break;
-                            case 'B':
-                                Candy candy = new Candy();
-                                candy.ItemSlot = itemParts[0];
-                                candy.ItemName = itemParts[1];
-                                candy.ItemPrice = Convert.ToDouble(itemParts[2]);
-                                candy.Stock = 5;
-                                items.Add(candy);
-                                break;
-                            case 'C':
-                                Drink drink = new Drink();
-                                drink.ItemSlot = itemParts[0];
-                                drink.ItemName = itemParts[1];
-                                drink.ItemPrice = Convert.ToDouble(itemParts[2]);
-                                items.Add(drink);
-                                drink.Stock = 5;
-                                break;
-                            case 'D':
-                                Gum gum = new Gum();
-                                gum.ItemSlot = itemParts[0];
-                                gum.ItemName = itemParts[1];
-                                gum.ItemPrice = Convert.ToDouble(itemParts[2]);
-                                gum.Stock = 5;
-                                items.Add(gum);
-                                break;
-                        }
-                    }
-                }
-            }
-            catch (IOException ex)
-            {
-                Console.WriteLine("Input error: " + ex);
-            }
-
-            return items;
-        }
+        
 
         //    private static i
     }
