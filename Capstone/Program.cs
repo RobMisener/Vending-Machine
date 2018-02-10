@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Capstone.Classes;
 using Capstone.Classes.VendingItems;
+using Capstone.Exceptions;
 
 namespace Capstone
 {
@@ -15,41 +16,41 @@ namespace Capstone
         {
             VendingMachine vendingMachine = new VendingMachine();
             vendingMachine.Items = vendingMachine.GetItems();
-            int userInput = 0;
-            int purchaseInputOption = 0;
+            string userInput = "";
+            string purchaseInputOption = "";
             int providedCash = 0;
             bool isDone = false;
             List<IVendingItem> items = new List<IVendingItem>();
+            VendingCLI cli = new VendingCLI();
 
             while (isDone != true)
             {
-
                 Console.WriteLine("\n(1) Display Vending Machine Items");
                 Console.WriteLine("(2) Purchase");
                 Console.WriteLine("(3) Quit");
-                userInput = Convert.ToInt32(Console.ReadLine());
+                userInput = cli.GetValidInput();
 
-                if (userInput == 1)
+                if (userInput == "1")
                 {
                     foreach (IVendingItem item in vendingMachine.Items)
                     {
                         //Console.WriteLine(item.ItemName + "|" + item.GetType());
                         string stockString = (item.Stock > 0) ? item.Stock.ToString() : "SOLD OUT";
-                        
+
                         Console.WriteLine(item.ItemSlot + ": " + item.ItemName + "..." + item.ItemPrice.ToString("c") + " Qty: " + stockString);
                     }
                 }
-                else if (userInput == 2)
+                else if (userInput == "2")
                 {
-                    purchaseInputOption = DisplayPurchaseMenu(vendingMachine);
-                    while (purchaseInputOption != 3)
+                    purchaseInputOption = cli.DisplayPurchaseMenu(vendingMachine);
+                    while (purchaseInputOption != "3")
                     {
-                        if (purchaseInputOption == 1)
+                        if (purchaseInputOption == "1")
                         {
                             providedCash = vendingMachine.GetProvidedCash();
                             vendingMachine.FeedMoney(providedCash, vendingMachine);
                         }
-                        else if (purchaseInputOption == 2)
+                        else if (purchaseInputOption == "2")
                         {
                             string productChoice = "";
                             Console.Write("Please enter the product code: ");
@@ -73,17 +74,19 @@ namespace Capstone
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Item out of stock");
+                                    Console.WriteLine("\nItem out of stock\n");
+                                    //throw new ItemOutOfStockException("Item out of stock.");
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Product not found");
+                                Console.WriteLine("Product was not found.");
+                                //throw new ProductNotFoundException("Product was not found.");
                             }
                         }
-                        purchaseInputOption = DisplayPurchaseMenu(vendingMachine);
+                        purchaseInputOption = cli.DisplayPurchaseMenu(vendingMachine);
                     }
-                    if (purchaseInputOption == 3)
+                    if (purchaseInputOption == "3")
                     {
                         Change change = new Change();
                         change.ReturnChange((decimal)vendingMachine.CurrentMoneyProvided);
@@ -103,27 +106,11 @@ namespace Capstone
                         transaction.PrintTransaction();
                     }
                 }
-                else if (userInput == 3)
+                else if (userInput == "3")
                 {
                     return;
                 }
             }
         }
-
-        private static int DisplayPurchaseMenu(VendingMachine vendingMachine)
-        {
-            int purchaseInputOption = 0;
-
-            Console.WriteLine("(1) Feed Money");
-            Console.WriteLine("(2) Select Product");
-            Console.WriteLine("(3) Finish Transaction");
-            Console.WriteLine("Current Money Provided: " + vendingMachine.CurrentMoneyProvided.ToString("C"));
-            purchaseInputOption = Convert.ToInt32(Console.ReadLine());
-            return purchaseInputOption;
-        }
-
-        
-
-        //    private static i
     }
 }

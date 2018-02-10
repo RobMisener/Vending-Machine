@@ -46,11 +46,14 @@
     <Compile Include="Classes\Change.cs" />
     <Compile Include="Classes\IVendingItem.cs" />
     <Compile Include="Classes\Transaction.cs" />
+    <Compile Include="Classes\VendingCLI.cs" />
     <Compile Include="Classes\VendingItems\Candy.cs" />
     <Compile Include="Classes\VendingItems\Chips.cs" />
     <Compile Include="Classes\VendingItems\Drink.cs" />
     <Compile Include="Classes\VendingItems\Gum.cs" />
     <Compile Include="Classes\VendingMachine.cs" />
+    <Compile Include="Exceptions\ItemOutOfStockException.cs" />
+    <Compile Include="Exceptions\ProductNotFoundException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

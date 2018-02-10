@@ -26,7 +26,6 @@ namespace Capstone.Classes
 
         public VendingMachine FeedMoney(int providedCash, VendingMachine vendingMachine)
         {
-
             Transaction transaction = new Transaction();
             transaction.PreviousBalance = vendingMachine.CurrentMoneyProvided;
             vendingMachine.CurrentMoneyProvided += providedCash;
@@ -34,15 +33,6 @@ namespace Capstone.Classes
             transaction.Machine = vendingMachine;
             transaction.PrintTransaction();
             return vendingMachine;
-        }
-
-        public List<IVendingItem> ReStockEachItem(List<IVendingItem> items)
-        {
-            foreach (IVendingItem item in items)
-            {
-                item.Stock = 5;
-            }
-            return items;
         }
 
         public List<IVendingItem> GetItems()
@@ -61,31 +51,23 @@ namespace Capstone.Classes
                         switch (itemParts[0][0])
                         {
                             case 'A':
-                                Chips chipItem = new Chips();
-                                chipItem.ItemSlot = itemParts[0];
-                                chipItem.ItemName = itemParts[1];
-                                chipItem.ItemPrice = Convert.ToDouble(itemParts[2]);
+                                IVendingItem chipItem = new Chips();
+                                chipItem = AddItem(chipItem, itemParts);
                                 items.Add(chipItem);
                                 break;
                             case 'B':
-                                Candy candy = new Candy();
-                                candy.ItemSlot = itemParts[0];
-                                candy.ItemName = itemParts[1];
-                                candy.ItemPrice = Convert.ToDouble(itemParts[2]);
+                                IVendingItem candy = new Candy();
+                                candy = AddItem(candy, itemParts);
                                 items.Add(candy);
                                 break;
                             case 'C':
-                                Drink drink = new Drink();
-                                drink.ItemSlot = itemParts[0];
-                                drink.ItemName = itemParts[1];
-                                drink.ItemPrice = Convert.ToDouble(itemParts[2]);
+                                IVendingItem drink = new Drink();
+                                drink = AddItem(drink, itemParts);
                                 items.Add(drink);
                                 break;
                             case 'D':
-                                Gum gum = new Gum();
-                                gum.ItemSlot = itemParts[0];
-                                gum.ItemName = itemParts[1];
-                                gum.ItemPrice = Convert.ToDouble(itemParts[2]);
+                                IVendingItem gum = new Gum();
+                                gum = AddItem(gum, itemParts);
                                 items.Add(gum);
                                 break;
                         }
@@ -96,10 +78,16 @@ namespace Capstone.Classes
             {
                 Console.WriteLine("Input error: " + ex);
             }
-
-            items = ReStockEachItem(items);
-
             return items;
+        }
+
+        private IVendingItem AddItem(IVendingItem item, string[] itemParts)
+        {
+            item.ItemSlot = itemParts[0];
+            item.ItemName = itemParts[1];
+            item.ItemPrice = Convert.ToDouble(itemParts[2]);
+            item.Stock = 5;
+            return item;
         }
 
         public VendingMachine UpdateBalance(VendingMachine vendingMachine, IVendingItem item)
@@ -124,45 +112,43 @@ namespace Capstone.Classes
                 {
                     using (StreamWriter sw = new StreamWriter("TempSalesReport.txt"))
                     {
-                        while (!sr.EndOfStream)
+                        try
                         {
-                            string stringItem = sr.ReadLine();
-
-
-                            if (stringItem.Contains(item.ItemName))
+                            while (!sr.EndOfStream)
                             {
-                                string[] itemParts = stringItem.Split('|');
-                                int previousSold = Convert.ToInt32(itemParts[1]);
-                                int newAmount = (previousSold+1);
-                                string newText = item.ItemName + "|" + newAmount;
-                                //lineChanger(newText, "SalesReport.txt", countLine);
-                                sw.WriteLine(newText);
-                            }
-                            else
-                            {
-                                if (stringItem.Contains("Total Sales"))
+                                string stringItem = sr.ReadLine();
+                                if (stringItem.Contains(item.ItemName))
                                 {
-                                    string newText = "Total Sales|" + vendingMachine.Balance.ToString("C");
+                                    string[] itemParts = stringItem.Split('|');
+                                    int previousSold = Convert.ToInt32(itemParts[1]);
+                                    int newAmount = (previousSold + 1);
+                                    string newText = item.ItemName + "|" + newAmount;
                                     sw.WriteLine(newText);
                                 }
                                 else
                                 {
-                                    sw.WriteLine(stringItem);
+                                    if (stringItem.Contains("Total Sales"))
+                                    {
+                                        string newText = "Total Sales|" + vendingMachine.Balance.ToString("C");
+                                        sw.WriteLine(newText);
+                                    }
+                                    else
+                                    {
+                                        sw.WriteLine(stringItem);
+                                    }
                                 }
-                                
                             }
-                            
                         }
-
+                        catch(IOException ex)
+                        {
+                            Console.WriteLine("Error writing to file");
+                        }
                     }
                     sr.Close();
                 }
-                
                 File.Delete("SalesReport.txt");
                 File.Move("TempSalesReport.txt", "SalesReport.txt");
                 File.Delete("TempSalesReport.txt");
-
-
             }
 
             else
@@ -177,17 +163,6 @@ namespace Capstone.Classes
                 }
             }
         }
-
-        static void lineChanger(string newText, string fileName, int line_to_edit)
-        {
-            using (StreamWriter sw = new StreamWriter(fileName, false))
-            {
-                string[] arrLine = File.ReadAllLines(fileName);
-                arrLine[line_to_edit - 1] = newText;
-                File.WriteAllLines(fileName, arrLine);
-            }
-        }
-
 
         public void Purchase(VendingMachine vendingMachine, IVendingItem item, Transaction transaction)
         {

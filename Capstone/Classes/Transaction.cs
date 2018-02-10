@@ -23,9 +23,9 @@ namespace Capstone.Classes
         {
             try
             {
-                using(StreamWriter sw = new StreamWriter("Log.txt", true))
+                using (StreamWriter sw = new StreamWriter("Log.txt", true))
                 {
-                    if(TransactionType != "" && TransactionType != null)
+                    if (TransactionType != "" && TransactionType != null)
                     {
                         sw.WriteLine(TransactionDate + " " + TransactionType + " " + PreviousBalance.ToString("C") + " " + Machine.CurrentMoneyProvided.ToString("C"));
                     }
@@ -33,10 +33,10 @@ namespace Capstone.Classes
                     {
                         sw.WriteLine(TransactionDate + " " + Item.ItemName + " " + Item.ItemSlot + " " + PreviousBalance.ToString("C") + " " + Machine.CurrentMoneyProvided.ToString("C"));
                     }
-                    
+
                 }
             }
-            catch(IOException ex)
+            catch (IOException ex)
             {
                 Console.WriteLine("Error writing transaction.");
             }

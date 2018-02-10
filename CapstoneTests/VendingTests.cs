@@ -6,18 +6,19 @@ using Capstone.Classes.VendingItems;
 namespace CapstoneTests
 {
     [TestClass]
-    public class UnitTest1
+    public class VendingTests
     {
+        VendingMachine vendingMachine = new VendingMachine();
+
         [TestMethod]
         public void TestGetItemsCorrectly()
         {
-            //arrange
-            VendingMachine vendingMachine = new VendingMachine();
+            // Arrange
 
-            //act
+            // Act
             vendingMachine.Items = vendingMachine.GetItems();
 
-            //assert
+            // Assert
             Assert.AreEqual(16, vendingMachine.Items.Count, "Item count not 16");
 
         }
@@ -25,32 +26,31 @@ namespace CapstoneTests
         [TestMethod]
         public void FeedsMoneyCorrectly()
         {
-            //arrange
-            VendingMachine vendingMachine2 = new VendingMachine();
+            // Arrange
 
-            //act
+
+            // Act
             int provideCash = 10;
-            vendingMachine2.FeedMoney(provideCash, vendingMachine2);
+            vendingMachine.FeedMoney(provideCash, vendingMachine);
 
-            //assert
-            Assert.AreEqual(provideCash, vendingMachine2.CurrentMoneyProvided, "Item count not 16");
+            // Assert
+            Assert.AreEqual(provideCash, vendingMachine.CurrentMoneyProvided, "Item count not 16");
 
         }
 
         [TestMethod]
         public void ReducesStock()
         {
-            //arrange
-            VendingMachine vendingMachine = new VendingMachine();
+            // Arrange
             Transaction transaction = new Transaction();
             IVendingItem item = new Candy();
             item.Stock = 5;
             item = vendingMachine.DecreaseStock(item);
 
-            //act
+            // Act
             vendingMachine.Purchase(vendingMachine, item, transaction);
 
-            //assert
+            // Assert
             Assert.AreEqual(4, item.Stock, "Item stock should decrease when purchased.");
         }
 
@@ -73,7 +73,6 @@ namespace CapstoneTests
         public void UpdatesBalanceCorrectly()
         {
             // Arrange
-            VendingMachine vendingMachine = new VendingMachine();
             IVendingItem item = new Candy();
             item.ItemPrice = 1.50;
             int provideCash = 10;
