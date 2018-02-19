@@ -52,6 +52,7 @@
     <Compile Include="Classes\VendingItems\Drink.cs" />
     <Compile Include="Classes\VendingItems\Gum.cs" />
     <Compile Include="Classes\VendingMachine.cs" />
+    <Compile Include="Classes\VendingMachineStocker.cs" />
     <Compile Include="Exceptions\ItemOutOfStockException.cs" />
     <Compile Include="Exceptions\ProductNotFoundException.cs" />
     <Compile Include="Program.cs" />
@@ -59,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="vendingmachine.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,31 +9,28 @@ namespace Capstone.Classes
 {
     public class Transaction
     {
-        public string TransactionType { get; set; }
-
-        public IVendingItem Item { get; set; }
-
-        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
-
-        public VendingMachine Machine { get; set; }
-
-        public double PreviousBalance { get; set; }
-
-        public void PrintTransaction()
+        public static void PrintTransaction(string itemName, string itemSlot, double previousBalance, double newBalance)
         {
             try
             {
                 using (StreamWriter sw = new StreamWriter("Log.txt", true))
                 {
-                    if (TransactionType != "" && TransactionType != null)
-                    {
-                        sw.WriteLine(TransactionDate + " " + TransactionType + " " + PreviousBalance.ToString("C") + " " + Machine.CurrentMoneyProvided.ToString("C"));
-                    }
-                    else
-                    {
-                        sw.WriteLine(TransactionDate + " " + Item.ItemName + " " + Item.ItemSlot + " " + PreviousBalance.ToString("C") + " " + Machine.CurrentMoneyProvided.ToString("C"));
-                    }
+                    sw.WriteLine(DateTime.UtcNow + " " + itemName + " " + itemSlot + " " + previousBalance.ToString("C") + " " + newBalance.ToString("C"));
+                }
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine("Error writing transaction.");
+            }
+        }
 
+        public static void PrintTransaction(string transactionType, double previousBalance, double newBalance)
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter("Log.txt", true))
+                {
+                    sw.WriteLine(DateTime.UtcNow + " " + transactionType + " " + previousBalance.ToString("C") + " " + newBalance.ToString("C"));
                 }
             }
             catch (IOException ex)

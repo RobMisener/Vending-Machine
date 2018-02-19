@@ -14,12 +14,13 @@ namespace CapstoneTests
         public void TestGetItemsCorrectly()
         {
             // Arrange
+            VendingMachineStocker stocker = new VendingMachineStocker();
 
             // Act
-            vendingMachine.Items = vendingMachine.GetItems();
+            var items = stocker.GetItems();
 
             // Assert
-            Assert.AreEqual(16, vendingMachine.Items.Count, "Item count not 16");
+            Assert.AreEqual(16, items.Count, "Item count not 16");
 
         }
 
@@ -31,7 +32,7 @@ namespace CapstoneTests
 
             // Act
             int provideCash = 10;
-            vendingMachine.FeedMoney(provideCash, vendingMachine);
+            vendingMachine.FeedMoney(provideCash);
 
             // Assert
             Assert.AreEqual(provideCash, vendingMachine.CurrentMoneyProvided, "Item count not 16");
@@ -45,10 +46,10 @@ namespace CapstoneTests
             Transaction transaction = new Transaction();
             IVendingItem item = new Candy();
             item.Stock = 5;
-            item = vendingMachine.DecreaseStock(item);
+            //item = vendingMachine.DecreaseStock(item);
 
             // Act
-            vendingMachine.Purchase(vendingMachine, item, transaction);
+            vendingMachine.Purchase(item);
 
             // Assert
             Assert.AreEqual(4, item.Stock, "Item stock should decrease when purchased.");
@@ -78,8 +79,8 @@ namespace CapstoneTests
             int provideCash = 10;
 
             // Act
-            vendingMachine.FeedMoney(provideCash, vendingMachine);
-            vendingMachine.UpdateBalance(vendingMachine, item);
+            vendingMachine.FeedMoney(provideCash);
+            //vendingMachine.UpdateBalance(item);
 
             // Assert
             Assert.AreEqual(1.50, vendingMachine.Balance, "The prie of the item should be added to balance.");
