@@ -1,6 +1,6 @@
 # Vending Machine Console Program
 
-<p align="center"> <img src="https://github.com/RobMisener/Vending-Machine/raw/master/ImagesForReadme/vendRAM1.gif" /> </p>
+<p align="center"> <img src="https://github.com/RobMisener/Vending-Machine/raw/master/ReadMeImages/vendRAM1.gif" /> </p>
 
 ## Installation:
 Clone and run with Visual Studio.
