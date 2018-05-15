@@ -8,7 +8,7 @@
 Clone and run with Visual Studio.
 
 ## Overview: 
-A C# console program. Simulates functions of a vending machine: including items, prices, user balance and change-return through various functions & classes. 
+A C# console program. Simulates functions of a vending machine. Has items, prices, user balance and change-return through various functions & classes. 
 
 ## Item Listing:
 Lists items and their quantity. When a user purchases an item, the quantity of the items left is subtracted based on the previous amount.
